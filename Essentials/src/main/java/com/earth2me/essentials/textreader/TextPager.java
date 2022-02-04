@@ -2,6 +2,7 @@ package com.earth2me.essentials.textreader;
 
 import com.earth2me.essentials.CommandSource;
 import com.earth2me.essentials.I18n;
+import org.apache.commons.lang.StringUtils;
 
 import java.util.List;
 import java.util.Locale;
@@ -75,14 +76,81 @@ public class TextPager {
                     return;
                 }
                 if (!onePage && commandName != null) {
-
                     final StringBuilder content = new StringBuilder();
                     final String[] title = commandName.split(" ", 2);
                     if (title.length > 1) {
-                        content.append(I18n.capitalCase(title[0])).append(": ");
-                        content.append(title[1]);
+                        content.append(StringUtils.chop(I18n.capitalCase(title[0]).replace("", "$"))).append(" $▶ ");
+                        content.append(StringUtils.chop(title[1].replace("", "$")));
+                        int stepCount = 0;
+                        int hexCount = 0;
+                        for (int i = 0; i < content.toString().length(); i++) {
+                            final char tempChar = content.toString().charAt(i);
+                            if (tempChar == '$') {//Count each $
+                                stepCount++;
+                            }
+                        }
+                        for (int i = 0; i < content.toString().length(); i++) {
+                            final char tempChar = content.toString().charAt(i);
+                            if (tempChar == '$') {
+                                //#344CEB
+                                final int r1Dec = 52;
+                                final int g1Dec = 76;
+                                final int b1Dec = 235;
+
+                                //#7434EB
+                                final int r2Dec = 116;
+                                final int g2Dec = 52;
+                                final int b2Dec = 235;
+
+                                final int rStep = (r2Dec - r1Dec) / stepCount;
+                                final int gStep = (g2Dec - g1Dec) / stepCount;
+                                final int bStep = (b2Dec - b1Dec) / stepCount;
+
+                                final String rFinal = Integer.toHexString(r1Dec + (rStep * hexCount));
+                                final String gFinal = Integer.toHexString(g1Dec + (gStep * hexCount));
+                                final String bFinal = Integer.toHexString(b1Dec + (bStep * hexCount));
+
+                                hexCount++;
+
+                                content.replace(i, i+1, "§x§" + rFinal.charAt(0) + "§" + rFinal.charAt(1) + "§" + gFinal.charAt(0) + "§" + gFinal.charAt(1) + "§" + bFinal.charAt(0) + "§" + bFinal.charAt(1));
+                            }
+                        }
                     } else {
-                        content.append(I18n.capitalCase(commandName));
+                        content.append(StringUtils.chop(I18n.capitalCase(commandName).replace("", "$"))); //Add $ infront of each char
+                        int stepCount = 0;
+                        int hexCount = 0;
+                        for (int i = 0; i < content.toString().length(); i++) {
+                            final char tempChar = content.toString().charAt(i);
+                            if (tempChar == '$') {//Count each $
+                                stepCount++;
+                            }
+                        }
+                        for (int i = 0; i < content.toString().length(); i++) {
+                            final char tempChar = content.toString().charAt(i);
+                            if (tempChar == '$') {
+                                //#344CEB
+                                final int r1Dec = 52;
+                                final int g1Dec = 76;
+                                final int b1Dec = 235;
+
+                                //#7434EB
+                                final int r2Dec = 116;
+                                final int g2Dec = 52;
+                                final int b2Dec = 235;
+
+                                final int rStep = (r2Dec - r1Dec) / stepCount;
+                                final int gStep = (g2Dec - g1Dec) / stepCount;
+                                final int bStep = (b2Dec - b1Dec) / stepCount;
+
+                                final String rFinal = Integer.toHexString(r1Dec + (rStep * hexCount));
+                                final String gFinal = Integer.toHexString(g1Dec + (gStep * hexCount));
+                                final String bFinal = Integer.toHexString(b1Dec + (bStep * hexCount));
+
+                                hexCount++;
+
+                                content.replace(i, i+1, "§x§" + rFinal.charAt(0) + "§" + rFinal.charAt(1) + "§" + gFinal.charAt(0) + "§" + gFinal.charAt(1) + "§" + bFinal.charAt(0) + "§" + bFinal.charAt(1));
+                            }
+                        }
                     }
                     sender.sendMessage(tl("infoPages", page, pages, content));
                 }
