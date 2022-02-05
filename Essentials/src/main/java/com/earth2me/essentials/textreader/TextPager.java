@@ -81,7 +81,7 @@ public class TextPager {
                     if (title.length > 1) {
                         content.append(StringUtils.chop(I18n.capitalCase(title[0]).replace("", "$"))).append(" $▶ ");
                         content.append(StringUtils.chop(title[1].replace("", "$")));
-                        int stepCount = 0;
+                        int stepCount = -1;
                         int hexCount = 0;
                         for (int i = 0; i < content.toString().length(); i++) {
                             final char tempChar = content.toString().charAt(i);
@@ -117,7 +117,7 @@ public class TextPager {
                         }
                     } else {
                         content.append(StringUtils.chop(I18n.capitalCase(commandName).replace("", "$"))); //Add $ infront of each char
-                        int stepCount = 0;
+                        int stepCount = -1;
                         int hexCount = 0;
                         for (int i = 0; i < content.toString().length(); i++) {
                             final char tempChar = content.toString().charAt(i);
